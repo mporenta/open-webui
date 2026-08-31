@@ -478,36 +478,22 @@
 				<div class=" self-center text-xs">
 					{$i18n.t('Reasoning Effort')}
 				</div>
-				<button
-					class="p-1 px-3 text-xs flex rounded-sm transition shrink-0 outline-hidden"
-					type="button"
-					on:click={() => {
-						params.reasoning_effort = (params?.reasoning_effort ?? null) === null ? 'medium' : null;
-					}}
+				<select
+					class="p-1 px-3 text-xs bg-transparent rounded-sm transition shrink-0 outline-hidden text-right"
+					aria-label={$i18n.t('Reasoning Effort')}
+					bind:value={params.reasoning_effort}
 				>
-					{#if (params?.reasoning_effort ?? null) === null}
-						<span class="ml-2 self-center"> {$i18n.t('Default')} </span>
-					{:else}
-						<span class="ml-2 self-center"> {$i18n.t('Custom')} </span>
-					{/if}
-				</button>
+					<option value={null}>{$i18n.t('Default')}</option>
+					<option value="off">{$i18n.t('Off')}</option>
+					<option value="minimal">{$i18n.t('Minimal')}</option>
+					<option value="low">{$i18n.t('Low')}</option>
+					<option value="medium">{$i18n.t('Medium')}</option>
+					<option value="high">{$i18n.t('High')}</option>
+					<option value="xhigh">{$i18n.t('XHigh')}</option>
+					<option value="max">{$i18n.t('Max')}</option>
+				</select>
 			</div>
 		</Tooltip>
-
-		{#if (params?.reasoning_effort ?? null) !== null}
-			<div class="flex mt-0.5 space-x-2">
-				<div class=" flex-1">
-					<input
-						class="text-sm w-full bg-transparent outline-hidden outline-none"
-						type="text"
-						aria-label={$i18n.t('Reasoning Effort')}
-						placeholder={$i18n.t('Enter reasoning effort')}
-						bind:value={params.reasoning_effort}
-						autocomplete="off"
-					/>
-				</div>
-			</div>
-		{/if}
 	</div>
 
 	<div class=" py-0.5 w-full justify-between">
