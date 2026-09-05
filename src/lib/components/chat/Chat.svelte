@@ -320,6 +320,7 @@
 	let imageGenerationEnabled = false;
 	let webSearchEnabled = false;
 	let codeInterpreterEnabled = false;
+	let snowflakeQueryEnabled = false;
 	let webSearchActive = false;
 	let showWebSearchConfirm = false;
 	let pendingWebSearchPrompt: string | null = null;
@@ -753,6 +754,7 @@
 			webSearchEnabled = input.webSearchEnabled ?? false;
 			imageGenerationEnabled = input.imageGenerationEnabled ?? false;
 			codeInterpreterEnabled = input.codeInterpreterEnabled ?? false;
+			snowflakeQueryEnabled = input.snowflakeQueryEnabled ?? false;
 			if (input.toolApprovalMode) {
 				await handleToolApprovalModeChange(input.toolApprovalMode);
 			}
@@ -818,6 +820,7 @@
 		selectedFilterIds = [];
 		webSearchEnabled = false;
 		imageGenerationEnabled = false;
+		snowflakeQueryEnabled = false;
 
 		const storageChatInput = sessionStorage.getItem(
 			`chat-input${chatIdProp ? `-${chatIdProp}` : ''}`
@@ -890,6 +893,7 @@
 		webSearchEnabled = false;
 		imageGenerationEnabled = false;
 		codeInterpreterEnabled = false;
+		snowflakeQueryEnabled = false;
 		prompt = '';
 		messageInput?.setText('');
 		await chatId.set('');
@@ -959,6 +963,7 @@
 		webSearchEnabled = false;
 		imageGenerationEnabled = false;
 		codeInterpreterEnabled = false;
+		snowflakeQueryEnabled = false;
 
 		if (selectedModelIds.filter((id) => id).length > 0) {
 			await setDefaults();
@@ -1599,6 +1604,7 @@
 				webSearchEnabled = false;
 				imageGenerationEnabled = false;
 				codeInterpreterEnabled = false;
+				snowflakeQueryEnabled = false;
 
 				await restoreChatInput(storageChatInput);
 			}
@@ -3554,7 +3560,8 @@
 				params: {
 					...$settings?.params,
 					...params,
-					stop: getStopTokens()
+					stop: getStopTokens(),
+					snowflake_query: snowflakeQueryEnabled
 				},
 
 				files: (files?.length ?? 0) > 0 ? files : undefined,
@@ -4019,6 +4026,7 @@
 		imageGenerationEnabled,
 		webSearchEnabled,
 		codeInterpreterEnabled,
+		snowflakeQueryEnabled,
 		toolApprovalMode
 	});
 
@@ -4435,6 +4443,7 @@
 										bind:selectedFilterIds
 										bind:imageGenerationEnabled
 										bind:codeInterpreterEnabled
+										bind:snowflakeQueryEnabled
 										{pendingOAuthTools}
 										{oauthRedirectHandler}
 										bind:webSearchEnabled
@@ -4527,6 +4536,7 @@
 										bind:selectedFilterIds
 										bind:imageGenerationEnabled
 										bind:codeInterpreterEnabled
+										bind:snowflakeQueryEnabled
 										{pendingOAuthTools}
 										{oauthRedirectHandler}
 										bind:webSearchEnabled
@@ -4587,6 +4597,7 @@
 									bind:selectedFilterIds
 									bind:imageGenerationEnabled
 									bind:codeInterpreterEnabled
+									bind:snowflakeQueryEnabled
 									bind:webSearchEnabled
 									bind:atSelectedModel
 									bind:showCommands

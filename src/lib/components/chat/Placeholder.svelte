@@ -53,6 +53,7 @@
 
 	export let imageGenerationEnabled = false;
 	export let codeInterpreterEnabled = false;
+	export let snowflakeQueryEnabled = false;
 	export let webSearchEnabled = false;
 	export let toolApprovalMode = 'full';
 	export let onToolApprovalModeChange: Function = () => {};
@@ -242,6 +243,7 @@
 						bind:selectedFilterIds
 						bind:imageGenerationEnabled
 						bind:codeInterpreterEnabled
+						bind:snowflakeQueryEnabled
 						bind:webSearchEnabled
 						bind:atSelectedModel
 						bind:showCommands

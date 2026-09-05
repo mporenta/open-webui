@@ -188,6 +188,7 @@
 	export let imageGenerationEnabled = false;
 	export let webSearchEnabled = false;
 	export let codeInterpreterEnabled = false;
+	export let snowflakeQueryEnabled = false;
 	export let toolApprovalMode = 'full';
 	export let onToolApprovalModeChange: Function = () => {};
 
@@ -244,6 +245,7 @@
 		imageGenerationEnabled,
 		webSearchEnabled,
 		codeInterpreterEnabled,
+		snowflakeQueryEnabled,
 		toolApprovalMode
 	};
 
@@ -800,6 +802,10 @@
 
 	let showSkillsButton = false;
 	$: showSkillsButton = ($skills ?? []).some((skill) => skill.is_active);
+
+	let showSnowflakeQueryButton = false;
+	$: showSnowflakeQueryButton =
+		selectedModelIds.length === 1 && selectedModelIds[0] === 'pi-agent';
 
 	let showWebSearchButton = false;
 	$: showWebSearchButton =
@@ -2133,6 +2139,7 @@
 															webSearchEnabled = false;
 															imageGenerationEnabled = false;
 															codeInterpreterEnabled = false;
+															snowflakeQueryEnabled = false;
 														}
 													}}
 													on:paste={async (e) => {
@@ -2250,17 +2257,18 @@
 										</button>
 									</InputMenu>
 
-									{#if showWebSearchButton || showImageGenerationButton || showCodeInterpreterButton || showToolsButton || showSkillsButton || (toggleFilters && toggleFilters.length > 0)}
+									{#if showSnowflakeQueryButton || showWebSearchButton || showImageGenerationButton || showCodeInterpreterButton || showToolsButton || showSkillsButton || (toggleFilters && toggleFilters.length > 0)}
 										<div
 											class="flex self-center w-[0.0625rem] h-4 mx-1 bg-gray-200/50 dark:bg-gray-800/50 shrink-0"
 										/>
 									{/if}
 
 									<div class="flex flex-1 items-center min-w-0 overflow-x-auto scrollbar-none">
-										{#if showWebSearchButton || showImageGenerationButton || showCodeInterpreterButton || showToolsButton || showSkillsButton || (toggleFilters && toggleFilters.length > 0)}
+										{#if showSnowflakeQueryButton || showWebSearchButton || showImageGenerationButton || showCodeInterpreterButton || showToolsButton || showSkillsButton || (toggleFilters && toggleFilters.length > 0)}
 											<IntegrationsMenu
 												selectedModels={selectedModelIds}
 												{toggleFilters}
+												{showSnowflakeQueryButton}
 												{showWebSearchButton}
 												{showImageGenerationButton}
 												{showCodeInterpreterButton}
@@ -2270,6 +2278,7 @@
 												bind:webSearchEnabled
 												bind:imageGenerationEnabled
 												bind:codeInterpreterEnabled
+												bind:snowflakeQueryEnabled
 												oauthRedirectHandler={(tool: {
 													id: string;
 													serverId: string;
