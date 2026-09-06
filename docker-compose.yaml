@@ -8,6 +8,31 @@ services:
     restart: unless-stopped
     image: ollama/ollama:${OLLAMA_DOCKER_TAG-latest}
 
+  pi-open-webui-backend:
+    build:
+      context: ../github/pi-dev/services/pi-open-webui-backend
+      dockerfile: Dockerfile
+      additional_contexts:
+        data-dbt: ../../data-dbt
+        snowflake-query: ../github/pi-dev/extensions/snowflake-query
+    container_name: pi-open-webui-backend
+    ports:
+      - 127.0.0.1:8643:8643
+    environment:
+      PI_API_SERVER_KEY: ${PI_API_SERVER_KEY-local-pi-backend-key}
+      GH_TOKEN: ${GITHUB_PERSONAL_ACCESS_TOKEN:?GITHUB_PERSONAL_ACCESS_TOKEN must be set}
+      SNOWFLAKE_CONNECTION: prod
+      SNOWFLAKE_CONFIG_PATH: /root/.snowflake/connections.toml
+    volumes:
+      - ${HOME}/.pi/agent/auth.json:/root/.pi/agent/auth.json
+      - ${HOME}/.snowflake:/root/.snowflake:ro
+      - ${HOME}/.pi/agent/sessions:/root/.pi/agent/sessions
+      - ../github/pi-dev/services/pi-open-webui-backend/.pi/APPEND_SYSTEM.md:/app/.pi/APPEND_SYSTEM.md:ro
+      - ../github/pi-dev/services/pi-open-webui-backend/src:/app/src
+      - ../github/pi-dev/extensions/snowflake-query:/app/extensions/snowflake-query
+      - snowflake-query-node-modules:/app/extensions/snowflake-query/node_modules
+    restart: unless-stopped
+
   open-webui:
     build:
       context: .
@@ -17,12 +42,20 @@ services:
     volumes:
       - open-webui:/app/backend/data
     depends_on:
-      - ollama
+      ollama:
+        condition: service_started
+      pi-open-webui-backend:
+        condition: service_healthy
     ports:
-      - ${OPEN_WEBUI_PORT-3000}:8080
+      - 127.0.0.1:${OPEN_WEBUI_PORT-3001}:8080
     environment:
-      - 'OLLAMA_BASE_URL=http://ollama:11434'
-      - 'WEBUI_SECRET_KEY='
+      OLLAMA_BASE_URL: http://ollama:11434
+      OPENAI_API_BASE_URL: http://pi-open-webui-backend:8643/v1
+      OPENAI_API_KEY: ${PI_API_SERVER_KEY-local-pi-backend-key}
+      WEBUI_SECRET_KEY: ''
+      WEBUI_AUTH: 'false'
+      ENABLE_PERSISTENT_CONFIG: 'false'
+      RAG_EMBEDDING_ENGINE: openai
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: unless-stopped
@@ -30,3 +63,4 @@ services:
 volumes:
   ollama: {}
   open-webui: {}
+  snowflake-query-node-modules: {}

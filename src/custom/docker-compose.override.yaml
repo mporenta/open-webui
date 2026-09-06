@@ -1,0 +1,7 @@
+# NOT auto-loaded by Compose: only a root-level docker-compose.override.yaml is
+# picked up automatically. Pass this file explicitly, e.g.:
+#   docker compose -f docker-compose.yaml -f src/custom/docker-compose.override.yaml up -d --build
+services:
+  open-webui:
+    volumes:
+      - ./src/custom/controls-panel.js:/app/build/static/loader.js:ro
