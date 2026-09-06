@@ -34,7 +34,8 @@
 
 	function findReasoningRow() {
 		const label = Array.from(document.querySelectorAll('div')).find(
-			(element) => element.childElementCount === 0 && element.textContent?.trim() === 'Reasoning Effort'
+			(element) =>
+				element.childElementCount === 0 && element.textContent?.trim() === 'Reasoning Effort'
 		);
 		return label?.parentElement ?? null;
 	}
