@@ -183,6 +183,7 @@
 			setToolbarValue(value);
 		} catch (error) {
 			console.error('[reasoning-effort-toolbar]', error);
+			stateSyncing = false;
 			await syncFromScopedState();
 		} finally {
 			if (openedControls) closeControls();

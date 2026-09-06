@@ -47,7 +47,7 @@ services:
       pi-open-webui-backend:
         condition: service_healthy
     ports:
-      - ${OPEN_WEBUI_PORT-3001}:8080
+      - 127.0.0.1:${OPEN_WEBUI_PORT-3001}:8080
     environment:
       OLLAMA_BASE_URL: http://ollama:11434
       OPENAI_API_BASE_URL: http://pi-open-webui-backend:8643/v1
