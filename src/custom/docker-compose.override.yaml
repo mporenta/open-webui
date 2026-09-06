@@ -1,0 +1,4 @@
+services:
+  open-webui:
+    volumes:
+      - ./src/custom/controls-panel.js:/app/build/static/loader.js:ro
