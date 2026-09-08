@@ -1,6 +1,7 @@
 (() => {
 	const REASONING_EFFORTS = ['off', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'];
 	const SELECT_MARKER = 'data-pi-reasoning-effort-select';
+	const CODE_INTERPRETER_LABEL = 'Code Interpreter';
 	const NATIVE_SELECTOR = 'input[aria-label="Reasoning Effort"]';
 	const MODEL_SELECTOR = '#model-selector-model-button';
 	const VOICE_SELECTOR = '#voice-input-button';
@@ -38,6 +39,19 @@
 				element.childElementCount === 0 && element.textContent?.trim() === 'Reasoning Effort'
 		);
 		return label?.parentElement ?? null;
+	}
+
+	function hideCodeInterpreterToggle() {
+		for (const button of document.querySelectorAll('button[aria-pressed]')) {
+			if (!button.querySelector('[role="switch"]')) continue;
+
+			const label = Array.from(button.querySelectorAll('div')).find(
+				(element) =>
+					element.childElementCount === 0 &&
+					element.textContent?.trim() === CODE_INTERPRETER_LABEL
+			);
+			if (label) button.hidden = true;
+		}
 	}
 
 	function setInputValue(input, value) {
@@ -193,6 +207,7 @@
 
 	async function reconcile() {
 		reconcileQueued = false;
+		hideCodeInterpreterToggle();
 		const select = ensureToolbarSelect();
 		if (!select) return;
 
